@@ -1,8 +1,8 @@
 # Notification Fan-Out Engine — Project Status & Implementation Tracking
 
-**Last Updated:** November 5, 2026  
-**Current Milestone:** Day 0 — Architecture Specification & Repository Initialization  
-**Overall Completion:** 0.0% (Source Code & Infrastructure) / 50.0% (Architecture, PRD & Planning)  
+**Last Updated:** November 7, 2026  
+**Current Milestone:** Day 1 — Infrastructure, Logical Replication & Database Foundations  
+**Overall Completion:** 5.0% (Source Code & Infrastructure) / 50.0% (Architecture, PRD & Planning)  
 **Target Architecture Version:** v1 MVP (Production-Ready Architecture Reference)  
 
 ---
@@ -21,12 +21,12 @@ The **Notification Fan-Out Engine** is a high-reliability, distributed notificat
 ### Status Dashboard
 | Metric | Status | Detail |
 |---|---|---|
-| **Project Phase** | **Phase 0: Scaffolding & Architecture** | Repository directory structure laid out; PRD and master planner expanded. |
-| **Source Code Progress** | **0.0%** | 35 skeleton files exist across `src/`, `infra/`, `scripts/`, `loadtest/`; all currently 0 bytes. |
+| **Project Phase** | **Phase 1: Infrastructure & Foundation** | Python environment initialized; Docker daemon verified; Day 1 foundation underway. |
+| **Source Code Progress** | **5.0%** | `pyproject.toml`, `.venv`, editable package `fanout`, `scripts/start_docker.sh`, `.env.example`, `Makefile`, and unit tests established. |
 | **Documentation Progress** | **80.0%** | `PRD.md` (Executive Summary + Section 13 v1 MVP Scope & Final Deliverables), `planner.md` (Master Plan + Section 6 Deep Component Blueprints for all 9 subsystems), `arch_v1.png`, and `arch_v2.png`. `architecture.md` and `delivery-semantics.md` are next. |
-| **Infrastructure Status** | **Unprovisioned** | `docker-compose.yml`, SQL init scripts, and Debezium configs await implementation. |
-| **Test Suite** | **0%** | Unit, integration, and ordering test directories exist but contain no test files. |
-| **Active Environment Blocker** | **Docker Daemon Inactive** | Host Docker daemon is not running; `pyproject.toml` dependencies and SQL schema need population. |
+| **Infrastructure Status** | **Docker Active** | Docker daemon running (v29.4.3). `docker-compose.yml`, SQL init scripts, and Debezium configs are next. |
+| **Test Suite** | **Active (1 test)** | Smoke test passing via pytest (`tests/unit/test_env.py`). |
+| **Active Environment Blocker** | **None** | Host Docker daemon is running; uv virtualenv installed and verified in editable mode. |
 
 ---
 
@@ -36,7 +36,7 @@ The table below tracks project progress against the 10-day implementation schedu
 
 | Milestone | Target Scope | Current Status | % Complete | Key Artifacts | Blockers / Prerequisites |
 |---|---|:---:|:---:|---|---|
-| **Day 1: Infrastructure & Schema** | Postgres schema, logical replication, Debezium outbox connector, Kafka topics, `docker-compose.yml`, `pyproject.toml`. | Not Started | 0% | `docker-compose.yml`, `infra/postgres/init.sql`, `infra/debezium/outbox-connector.json`, `infra/kafka/topics.sh` (all 0 B) | Docker daemon must be running; PostgreSQL replication user grants. |
+| **Day 1: Infrastructure & Schema** | Postgres schema, logical replication, Debezium outbox connector, Kafka topics, `docker-compose.yml`, `pyproject.toml`. | In Progress | 35% | `pyproject.toml`, `.venv`, `scripts/start_docker.sh`, `Makefile`, `.env.example` (populated); `docker-compose.yml`, `infra/postgres/init.sql`, `infra/kafka/topics.sh`, `infra/debezium/outbox-connector.json` pending. | Docker daemon active; Python environment configured. |
 | **Day 2: Ingest API** | `POST /events` writing `events` + `outbox` in one transaction, client idempotency keys, subscription CRUD endpoints. | Not Started | 0% | `src/fanout/api/main.py`, `routes_events.py`, `routes_subscriptions.py`, `outbox.py` (all 0 B) | Day 1 database schema and connection pool. |
 | **Day 3: Fan-Out Worker** | Consume `events.raw`, resolve matching active subscriptions, insert `deliveries` (idempotent), publish to channel topics (`deliveries.webhook`, `deliveries.email`). | Not Started | 0% | `src/fanout/fanout_worker/worker.py`, `src/fanout/common/kafka.py` (all 0 B) | Day 1 Debezium CDC pipeline and Day 2 subscription records. |
 | **Day 4: Webhook Delivery** | Webhook sender, HMAC-SHA256 signature, headers (`X-Event-ID`, `X-Delivery-ID`), response classification, attempt records, mock receiver. | Not Started | 0% | `src/fanout/channels/webhook.py`, `src/fanout/delivery/webhook_worker.py`, `src/fanout/common/signing.py` (all 0 B) | Day 3 delivery messages on Kafka. |
